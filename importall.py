@@ -3,8 +3,8 @@ import mset
 import os
 
 #材质属性关键词列表
-MatelrialType=['Normal','Albedo','Roughness','Metalness','Occlusion','Scratter','Emissive']
-SubroutineType=['Surface','Albedo','Microsurface','Reflectivity','Occlusion','Transmission','Emission']
+MatelrialType=['Normal','Albedo','Roughness','Metalness','Occlusion','Mask','Emissive','Alpha']
+SubroutineType=['Surface','Albedo','Microsurface','Reflectivity','Occlusion','Transmission','Emissive','Transparency']
 #关键字查询
 def FindFilesByKeywords(FloderPath,keyword1,keyword2):
     FoundFiles=[]
@@ -21,12 +21,21 @@ def FindFilesByKeywords(FloderPath,keyword1,keyword2):
         return 0
 #将检索到的贴图文件放入对应插槽
 def ImportTex(Path,Mat,keyword1,keyword2):#keyword1表示材质名称，keyword2表示插槽名称，即贴图类型
-    shader = Mat.getSubroutine(SubroutineType[MatelrialType.index(keyword2)])
+    if not Mat.getSubroutine(SubroutineType[MatelrialType.index(keyword2)]):
+        if keyword2=='Mask':
+            Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],'Subsurface Scratting')#打开对应通道
+        elif keyword2=='Alpha':
+            Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],'Dither')#打开对应通道
+        else:
+            Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],keyword2)#打开对应通道
+    shader = Mat.getSubroutine(SubroutineType[MatelrialType.index(keyword2)])#根据通道名获取通道对象
     tex = mset.Texture(Path + "/" + keyword1 + "_" + keyword2 + ".png")
+    tex.useMipmaps=True
     if keyword2!='Normal':
         tex.sRGB=True
-    tex.useMipmaps=True
     if shader:
+        if keyword2=='Roughness' or keyword2=='Metalness':
+            shader.setField(keyword2, 1.0)
         shader.setField(keyword2+" Map", tex)
     else:
         print('NoneType')
