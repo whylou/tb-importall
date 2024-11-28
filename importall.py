@@ -23,7 +23,7 @@ def FindFilesByKeywords(FloderPath,keyword1,keyword2):
 def ImportTex(Path,Mat,keyword1,keyword2):#keyword1表示材质名称，keyword2表示插槽名称，即贴图类型
     if not Mat.getSubroutine(SubroutineType[MatelrialType.index(keyword2)]):
         if keyword2=='Mask':
-            Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],'Subsurface Scratting')#打开对应通道
+            Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],'Subsurface Scattering')#打开对应通道
         elif keyword2=='Alpha':
             Mat.setSubroutine(SubroutineType[MatelrialType.index(keyword2)],'Dither')#打开对应通道
         else:
@@ -31,11 +31,11 @@ def ImportTex(Path,Mat,keyword1,keyword2):#keyword1表示材质名称，keyword2
     shader = Mat.getSubroutine(SubroutineType[MatelrialType.index(keyword2)])#根据通道名获取通道对象
     tex = mset.Texture(Path + "/" + keyword1 + "_" + keyword2 + ".png")
     tex.useMipmaps=True
-    if keyword2!='Normal':
-        tex.sRGB=True
     if shader:
-        if keyword2=='Roughness' or keyword2=='Metalness':
+        if keyword2 == 'Roughness' or keyword2 == 'Metalness':
             shader.setField(keyword2, 1.0)
+        if keyword2 in ('Occlusion','Albedo','Emissive'):
+            tex.sRGB=True
         shader.setField(keyword2+" Map", tex)
     else:
         print('NoneType')
