@@ -1,7 +1,8 @@
 ##思路：自动查询场景中所有材质，加入列表。手动选择材质所在文件夹，按照贴图名称查询对应材质，并将其赋予对应材质，一键导入。
 import mset
 import os
-
+import time
+starttime=time.time()
 #材质属性关键词列表
 MatelrialType=['Normal','Albedo','Roughness','Metalness','Occlusion','Mask','Emissive','Alpha']
 SubroutineType=['Surface','Albedo','Microsurface','Reflectivity','Occlusion','Transmission','Emissive','Transparency']
@@ -58,6 +59,9 @@ def doSomething():
                     ImportTex(ChooseFloder,Tex,Tex.name,TexTypeName)
                 else:
                     print(Tex.name + '_' + TexTypeName +'Import Failed')
+        endtime=time.time()
+        totaltime=endtime-starttime
+        print(f"Total Time: {totaltime:.6f} 秒")
         print("Import finish")
     else:
         print("no choose floder")
