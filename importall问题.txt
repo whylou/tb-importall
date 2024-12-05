@@ -7,7 +7,28 @@
                 for key2 in sceneMaterials[]
                     if key2包含在filename中
                         ImportTex(Path,findMaterial(key1) ‑> Material,key1,key2)
-以上伪码构建完成
+
+参数为Path
+
+#关键字查询函数
+def FindFilesByKeywords(FloderPath,list1,list2):
+    for root, dirs, files in os.walk(FloderPath):
+        for file in files:
+            # 检查文件名是否包含所有关键字
+            if os.path.isfile(os.path.join(FloderPath,file)):
+                for keyword1 in list1
+                    if keyword1 in file
+                        for keyword2 in List2
+                            if keyword2 in file
+                                ImportTex(Path,findMaterial(keyword1),keyword1,keyword2)
+#执行体
+if ChooseFloder:
+    FindFilesByKeywords(ChooseFloder,sceneMaterialsName,MaterialType)
+测试结果：copy=4.6
+ori=2.8
+
+copy=20
+ori=16
 3.透明通道支持不好,解决
 4.自动打开通道功能无，解决
 5.想给按钮旁边加两个keyword提示
